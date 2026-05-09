@@ -1,20 +1,15 @@
 package com.example.hibernatedao.repository;
 
 import com.example.hibernatedao.entity.Person;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import org.springframework.stereotype.Repository;
+import com.example.hibernatedao.entity.PersonId;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
-@Repository
-public class PersonRepository {
-    @PersistenceContext
-    private EntityManager entityManager;
 
-    public List<Person> getPersonsByCity(String city) {
-        return entityManager.createQuery("SELECT p FROM Person p WHERE p.cityOfLiving = :city", Person.class)
-                .setParameter("city", city)
-                .getResultList();
-    }
+public interface PersonRepository extends JpaRepository<Person, PersonId> {
+    List<Person> findByCityOfLiving(String city);
+    List<Person> findByAgeLessThanOrderByAgeAsc(Integer age);
+    Optional<Person> findByNameAndSurname(String name, String surname);
 }
